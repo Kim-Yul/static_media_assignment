@@ -1,11 +1,59 @@
-<h1>LIKELION 11 Blog Project</h1>
-<a href="{% url 'new' %}">새 글 작성하기</a>
-<div>
-    {% for blog in blogs %}
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+BLOG HOME
+{% endblock title %}
+
+{% block content %}
+<h1 id="head_en">LIKELION 11 Blog Project
+    <img src={% static 'blog/img/cupcake.png' %} alt="이미지" width=100em>
+</h1>
+<a href="{% url 'new' %}" id="posting">새글쓰기</a>
+<hr/>
+
+<form action="{%url 'search'%}" method="POST" id="search_choice">
+    {% csrf_token %}
+    <select name="choice">
+        <option value="제목" selected="selected">제목</option>
+        <option value="제목+본문">제목+본문</option>
+        <option value="본문">본문</option>
+    </select>
+    <input class="searched" type="search" minlength="1" name="Search" placeholder="검색어를 입력하세요"/>
+</form>
+
+<hr/>
+
+<div id="divColor">
+    {% for blog in page_obj %}
     <a href="{%url 'detail' blog.id %}">
         <h2>{{blog.title}}</h2>
         <p>{{blog.summary}}</p>
-        <p>{{blog.created_at}}</p>
     </a>
+    <p id="date">{{blog.created_at}}</p>
+    <hr id="line"/>
     {% endfor %}
 </div>
+
+<span>
+    {% if page_obj.has_previous %}
+    <a href="?page=1" id="btn"><<</a>
+    <!--<a href="?page={{page_obj.previous_page_number}}">이전</a>-->
+    {% endif %}
+</span>
+<span>
+    &nbsp;&nbsp;
+    {% for i in blogs_number %}
+    <a href="?page={{i}}" id=btn>{{i}}</a>
+    &nbsp;&nbsp; / &nbsp;&nbsp;
+    {% endfor %}
+    <a href="?page={{blogs_len}}" id="btn">{{blogs_len}}</a>
+    &nbsp;&nbsp;
+</span>
+<span>
+    {% if page_obj.has_next %}
+    <!--<a href="?page={{page_obj.next_page_number}}">다음으로</a>-->
+    <a href="?page={{page_obj.paginator.num_pages}}" id="btn">>></a>
+    {% endif %}
+</span>
+{% endblock content %}

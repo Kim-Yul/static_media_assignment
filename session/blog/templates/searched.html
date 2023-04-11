@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}
+Searched Blog
+{% endblock title %}
+
+{% block content %}
+<h1 id="head_kr">검색 결과</h1>
+<a href="{% url 'home' %}" id="toHome">홈으로</a>
+<hr/>
+
+<div id="kr">
+    {% if keywords.count == 0 %}
+        <h3>검색 결과가 없습니다.</h3>
+    {% elif searched %}
+        <h3>[{{choice}}] 내에서 검색한 '{{searched}}' 키워드의 정보입니다.</h3>
+        <h5>검색결과 수 : {{keywords.count}}</h5>
+        <hr/>
+        {% for keyword in keywords %}
+            <a href="{%url 'detail' keyword.id %}">
+                <h3>{{keyword.title}}</h3>
+                <p>{{keyword.summary}}</p>
+            </a>
+            <p id="date">{{keyword.created_at}}</p>
+        {% endfor %}
+    {% else %}
+        <h3>검색 정보를 다시 확인하여 주십시오.</h3>
+    {% endif %}
+</div>
+{% endblock content %}
